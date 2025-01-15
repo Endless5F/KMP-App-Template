@@ -54,6 +54,20 @@ kotlin {
             implementation(libs.koin.core)
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.navigation.compose)
+            implementation("io.github.oshai:kotlin-logging:7.0.0")
+
+            // 模糊效果
+            implementation("dev.chrisbanes.haze:haze:1.2.1")
+//            implementation("dev.chrisbanes.haze:haze-materials:1.2.1")
+            // Lottie
+            implementation("io.github.ismai117:kottie:1.9.6")
+            // UUID
+            implementation("app.softwork:kotlinx-uuid-core:0.1.1")
+            implementation("app.softwork:kotlinx-uuid-datetime:0.1.1")
+            implementation("app.softwork:kotlinx-uuid-sqldelight:0.1.1")
+
+
+
         }
     }
 }
