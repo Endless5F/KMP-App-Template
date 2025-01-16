@@ -38,9 +38,12 @@ kotlin {
             implementation(libs.ktor.client.darwin)
         }
         commonMain.dependencies {
+            implementation(libs.androidx.annotation)
+
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)
+            implementation(compose.material3AdaptiveNavigationSuite)
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
@@ -54,17 +57,17 @@ kotlin {
             implementation(libs.koin.core)
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.navigation.compose)
-            implementation("io.github.oshai:kotlin-logging:7.0.0")
+            implementation(libs.kotlin.logging)
 
             // 模糊效果
-            implementation("dev.chrisbanes.haze:haze:1.2.1")
-//            implementation("dev.chrisbanes.haze:haze-materials:1.2.1")
+            implementation(libs.haze)
+//            implementation(libs.haze.materials)
             // Lottie
-            implementation("io.github.ismai117:kottie:1.9.6")
+            implementation(libs.kottie)
             // UUID
-            implementation("app.softwork:kotlinx-uuid-core:0.1.1")
-            implementation("app.softwork:kotlinx-uuid-datetime:0.1.1")
-            implementation("app.softwork:kotlinx-uuid-sqldelight:0.1.1")
+            implementation(libs.kotlinx.uuid.core)
+            implementation(libs.kotlinx.uuid.datetime)
+            implementation(libs.kotlinx.uuid.sqldelight)
 
 
 

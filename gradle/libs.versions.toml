@@ -1,10 +1,14 @@
 [versions]
 agp = "8.7.3"
 adaptive = "1.0.1"
-androidx-activityCompose = "1.9.3"
+androidx-activityCompose = "1.10.0"
 androidx-ui-tooling = "1.7.6"
 coil = "3.0.4"
 compose-multiplatform = "1.7.3"
+haze = "1.2.1"
+kotlinLogging = "7.0.0"
+kotlinxUuidSqldelight = "0.1.1"
+kottie = "1.9.6"
 ksp = "2.1.0-1.0.29"
 koin = "4.0.0"
 kotlin = "2.1.0"
@@ -15,18 +19,27 @@ moko-permissions = "0.18.1"
 moko-geo = "0.7.0"
 navigationCompose = "2.8.0-alpha10"
 compose-rich-editor = "1.0.0-rc05-k2"
+annotationJvm = "1.9.1"
 
 [libraries]
 adaptive = { module = "org.jetbrains.compose.material3.adaptive:adaptive", version.ref = "adaptive" }
 adaptive-layout = { module = "org.jetbrains.compose.material3.adaptive:adaptive-layout", version.ref = "adaptive" }
 adaptive-navigation = { module = "org.jetbrains.compose.material3.adaptive:adaptive-navigation", version.ref = "adaptive" }
+
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
 androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "androidx-ui-tooling" }
 androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "androidx-ui-tooling" }
 coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
 coil-network-ktor = { group = "io.coil-kt.coil3", name = "coil-network-ktor3", version.ref = "coil" }
+haze = { module = "dev.chrisbanes.haze:haze", version.ref = "haze" }
+haze-materials = { module = "dev.chrisbanes.haze:haze-materials", version.ref = "haze" }
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koin" }
+kotlin-logging = { module = "io.github.oshai:kotlin-logging", version.ref = "kotlinLogging" }
+kotlinx-uuid-core = { module = "app.softwork:kotlinx-uuid-core", version.ref = "kotlinxUuidSqldelight" }
+kotlinx-uuid-datetime = { module = "app.softwork:kotlinx-uuid-datetime", version.ref = "kotlinxUuidSqldelight" }
+kotlinx-uuid-sqldelight = { module = "app.softwork:kotlinx-uuid-sqldelight", version.ref = "kotlinxUuidSqldelight" }
+kottie = { module = "io.github.ismai117:kottie", version.ref = "kottie" }
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
@@ -47,6 +60,7 @@ moko-permissions = { module = "dev.icerock.moko:permissions", version.ref = "mok
 moko-permissions-compose = { module = "dev.icerock.moko:permissions-compose", version.ref = "moko-permissions" }
 navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 compose-rich-editor = { module = "com.mohamedrejeb.richeditor:richeditor-compose", version.ref = "compose-rich-editor" }
+androidx-annotation = { group = "androidx.annotation", name = "annotation", version.ref = "annotationJvm" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

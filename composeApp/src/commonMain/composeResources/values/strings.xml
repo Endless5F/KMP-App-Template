@@ -10,6 +10,10 @@
     <string name="label_credits">Credits</string>
 
     <string name="back">Back</string>
+    <string name="home">首页</string>
+    <string name="favorites">喜欢</string>
+    <string name="shopping">购物车</string>
+    <string name="profile">我的</string>
 
     <string name="no_data_available">No data available</string>
 </resources>

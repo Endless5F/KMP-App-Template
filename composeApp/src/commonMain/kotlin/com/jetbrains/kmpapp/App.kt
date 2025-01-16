@@ -1,5 +1,6 @@
 package com.jetbrains.kmpapp
 
+//import androidx.annotation.StringRes
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -15,6 +16,7 @@ import com.jetbrains.kmpapp.screens.detail.DetailScreen
 import com.jetbrains.kmpapp.screens.list.ListScreen
 import kotlinx.serialization.Serializable
 
+
 @Serializable
 object ListDestination
 
@@ -26,23 +28,42 @@ fun App() {
     MaterialTheme(
         colorScheme = if (isSystemInDarkTheme()) darkColorScheme() else lightColorScheme()
     ) {
-        Surface {
-            val navController: NavHostController = rememberNavController()
-            NavHost(navController = navController, startDestination = ListDestination) {
-                composable<ListDestination> {
-                    ListScreen(navigateToDetails = { objectId ->
-                        navController.navigate(DetailDestination(objectId))
-                    })
-                }
-                composable<DetailDestination> { backStackEntry ->
-                    DetailScreen(
-                        objectId = backStackEntry.toRoute<DetailDestination>().objectId,
-                        navigateBack = {
-                            navController.popBackStack()
-                        }
-                    )
-                }
+//        NavigationSuiteScaffold {
+//
+//        }
+
+    }
+}
+
+@Composable
+fun TemplatePage() {
+    Surface {
+        val navController: NavHostController = rememberNavController()
+        NavHost(navController = navController, startDestination = ListDestination) {
+            composable<ListDestination> {
+                ListScreen(navigateToDetails = { objectId ->
+                    navController.navigate(DetailDestination(objectId))
+                })
+            }
+            composable<DetailDestination> { backStackEntry ->
+                DetailScreen(
+                    objectId = backStackEntry.toRoute<DetailDestination>().objectId,
+                    navigateBack = {
+                        navController.popBackStack()
+                    }
+                )
             }
         }
     }
 }
+
+//enum class AppDestinations(
+//    val label: Int,
+//    val icon: ImageVector,
+//    val contentDescription: Int
+//) {
+//    HOME(R.string.home, Icons.Default.Home, R.string.home),
+//    FAVORITES(R.string.favorites, Icons.Default.Favorite, R.string.favorites),
+//    SHOPPING(R.string.shopping, Icons.Default.ShoppingCart, R.string.shopping),
+//    PROFILE(R.string.profile, Icons.Default.AccountBox, R.string.profile),
+//}
