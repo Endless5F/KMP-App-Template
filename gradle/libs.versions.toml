@@ -1,5 +1,6 @@
 [versions]
 agp = "8.6.1"
+adaptive = "1.0.1" // 适应性布局
 androidx-activityCompose = "1.9.3"
 androidx-ui-tooling = "1.7.4"
 coil = "3.0.4"
@@ -7,9 +8,17 @@ compose-multiplatform = "1.7.3"
 koin = "4.0.0"
 kotlin = "2.1.0"
 ktor = "3.0.0"
+sqldelight = "2.0.2" // SQL 全平台
+moko-media = "0.11.0"
+moko-permissions = "0.18.1"
+moko-geo = "0.7.0" // 位置
 navigationCompose = "2.8.0-alpha10"
+compose-rich-editor = "1.0.0-rc05-k2" // 富文本编辑器
 
 [libraries]
+adaptive = { module = "org.jetbrains.compose.material3.adaptive:adaptive", version.ref = "adaptive" }
+adaptive-layout = { module = "org.jetbrains.compose.material3.adaptive:adaptive-layout", version.ref = "adaptive" }
+adaptive-navigation = { module = "org.jetbrains.compose.material3.adaptive:adaptive-navigation", version.ref = "adaptive" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
 androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "androidx-ui-tooling" }
 androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "androidx-ui-tooling" }
@@ -22,7 +31,21 @@ ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+sqldelight-runtime = { module = "app.cash.sqldelight:runtime", version.ref = "sqldelight" }
+sqldelight-paging3-extensions = { module = "app.cash.sqldelight:androidx-paging3-extensions", version.ref = "sqldelight" }
+sqldelight-async-extensions = { module = "app.cash.sqldelight:async-extensions", version.ref = "sqldelight" }
+sqldelight-coroutines-extensions = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "sqldelight" }
+sqldelight-native-driver = { module = "app.cash.sqldelight:native-driver", version.ref = "sqldelight" }
+sqldelight-primitive-adapters = { module = "app.cash.sqldelight:primitive-adapters", version.ref = "sqldelight" }
+sqldelight-web-worker-driver= { module = "app.cash.sqldelight:web-worker-driver", version.ref = "sqldelight" }
+moko-media = { module = "dev.icerock.moko:media", version.ref = "moko-media" }
+moko-media-compose = { module = "dev.icerock.moko:media-compose", version.ref = "moko-media" }
+moko-geo = { module = "dev.icerock.moko:geo", version.ref = "moko-geo" }
+moko-geo-compose = { module = "dev.icerock.moko:geo-compose", version.ref = "moko-geo" }
+moko-permissions = { module = "dev.icerock.moko:permissions", version.ref = "moko-permissions" }
+moko-permissions-compose = { module = "dev.icerock.moko:permissions-compose", version.ref = "moko-permissions" }
 navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
+compose-rich-editor = { module = "com.mohamedrejeb.richeditor:richeditor-compose", version.ref = "compose-rich-editor" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
