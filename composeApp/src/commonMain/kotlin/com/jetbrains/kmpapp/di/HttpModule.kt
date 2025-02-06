@@ -70,7 +70,7 @@ val httpModule = module {
                     path(PATH)
                 }
                 header(
-                    "Gn-Info",
+                    "MuseumInfo",
                     "terminal=${"#deviceBrand"}; versionCode=${"#versionCode"}"
                 ) // TODO deviceBrand and versionCode 替换为真实值
                 runBlocking {
