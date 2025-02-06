@@ -1,4 +1,4 @@
-package com.jetbrains.kmpapp.page
+package com.jetbrains.kmpapp.compose.index
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column

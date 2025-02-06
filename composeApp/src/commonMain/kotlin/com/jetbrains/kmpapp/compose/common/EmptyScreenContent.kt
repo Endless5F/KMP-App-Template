@@ -1,4 +1,4 @@
-package com.jetbrains.kmpapp.screens
+package com.jetbrains.kmpapp.compose.common
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.Text
@@ -7,10 +7,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import kmp_app_template.composeapp.generated.resources.Res
 import kmp_app_template.composeapp.generated.resources.no_data_available
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.stringResource
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun EmptyScreenContent(
     modifier: Modifier = Modifier,

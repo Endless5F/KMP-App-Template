@@ -1,4 +1,4 @@
-package com.jetbrains.kmpapp.page
+package com.jetbrains.kmpapp.compose.index
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues

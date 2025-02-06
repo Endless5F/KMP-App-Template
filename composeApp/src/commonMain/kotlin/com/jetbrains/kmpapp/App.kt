@@ -32,12 +32,12 @@ import com.jetbrains.kmpapp.compose.adaptive.NavigationSuiteItemColors
 import com.jetbrains.kmpapp.compose.adaptive.NavigationSuiteScaffold
 import com.jetbrains.kmpapp.compose.adaptive.NavigationSuiteScaffoldDefaults
 import com.jetbrains.kmpapp.compose.adaptive.WindowAdaptiveInfoDefault
-import com.jetbrains.kmpapp.page.FavoritesDestination
-import com.jetbrains.kmpapp.page.HomeDestination
-import com.jetbrains.kmpapp.page.ProfileDestination
-import com.jetbrains.kmpapp.page.ShoppingDestination
-import com.jetbrains.kmpapp.screens.detail.DetailScreen
-import com.jetbrains.kmpapp.screens.list.ListScreen
+import com.jetbrains.kmpapp.compose.index.FavoritesDestination
+import com.jetbrains.kmpapp.compose.index.HomeDestination
+import com.jetbrains.kmpapp.compose.index.ProfileDestination
+import com.jetbrains.kmpapp.compose.index.ShoppingDestination
+import com.jetbrains.kmpapp.compose.museum.DetailScreen
+import com.jetbrains.kmpapp.compose.museum.ListScreen
 import kotlinx.serialization.Serializable
 
 @Serializable

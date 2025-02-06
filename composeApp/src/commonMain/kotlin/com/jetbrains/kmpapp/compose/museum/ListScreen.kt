@@ -1,4 +1,4 @@
-package com.jetbrains.kmpapp.screens.list
+package com.jetbrains.kmpapp.compose.museum
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
@@ -28,8 +28,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
-import com.jetbrains.kmpapp.data.MuseumObject
-import com.jetbrains.kmpapp.screens.EmptyScreenContent
+import com.jetbrains.kmpapp.compose.common.EmptyScreenContent
+import com.jetbrains.kmpapp.modules.MuseumObject
+import com.jetbrains.kmpapp.viewmodels.ListViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable

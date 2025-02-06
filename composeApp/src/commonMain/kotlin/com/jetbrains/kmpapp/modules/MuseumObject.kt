@@ -1,4 +1,4 @@
-package com.jetbrains.kmpapp.data
+package com.jetbrains.kmpapp.modules
 
 import kotlinx.serialization.Serializable
 
