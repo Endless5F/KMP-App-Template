@@ -10,5 +10,5 @@ fun initKoin() {
     }
 }
 
-val appModule = listOf(httpModule, museumModule, viewModelModule)
+val appModule = listOf(httpModule, coroutineModule, museumModule, repositoriesModule, viewModelModule)
 

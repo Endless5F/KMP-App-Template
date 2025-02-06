@@ -33,8 +33,9 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import org.koin.mp.KoinPlatform
 
+const val HTTP_NAMED = "OkHttpClient"
 // TODO 替换为真实值
-const val HOST = "https://www.wanandroid.com"
+const val HOST = "www.wanandroid.com"
 const val PATH = ""
 
 @OptIn(ExperimentalSerializationApi::class)
@@ -45,7 +46,7 @@ val json = Json(DefaultJson) {
 }
 
 val httpModule = module {
-    single(named("OkHttpClient")) {
+    single(named(HTTP_NAMED)) {
         HttpClient {
             install(UserAgent) {
                 agent = ""
@@ -97,15 +98,15 @@ fun getHttpClient() = KoinPlatform.getKoin().get<HttpClient>(named("OkHttpClient
 
 @Serializable
 data class BodyWrapper<T>(
-    val status: Int,
-    val message: String,
+    val errorCode: Int = 0,
+    val errorMsg: String?,
     val data: T,
 )
 
 suspend inline fun <reified T> HttpResponse.bodyData(): T {
     val bodyWrapper = body<BodyWrapper<T>>()
-    if (bodyWrapper.status != 200) {
-        throw Exception(bodyWrapper.message)
+    if (bodyWrapper.errorCode != 0) {
+        throw Exception(bodyWrapper.errorMsg)
     }
     return bodyWrapper.data
 }
