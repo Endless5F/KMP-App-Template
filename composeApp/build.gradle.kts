@@ -72,8 +72,19 @@ kotlin {
             implementation(libs.kotlinx.uuid.core)
             implementation(libs.kotlinx.uuid.datetime)
             implementation(libs.kotlinx.uuid.sqldelight)
-
-
+            // 下拉刷新
+            implementation(libs.pullrefresh)
+            // https://github.com/ltttttttttttt/ComposeViews?tab=readme-ov-file
+            // ComposePager
+            // Banner
+            // PagerIndicator
+            // ImageBanner
+            // RefreshLayout + PullToRefresh + VerticalRefreshableLayout
+            // FlowLayout
+            // ValueSelector + DateSelector
+            // MenuFloatingActionButton
+            // ChainScrollableComponent + ScrollableAppBar + SwipeToDismiss
+            implementation(libs.composeviews)
 
         }
     }
