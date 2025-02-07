@@ -4,10 +4,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -20,6 +22,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -27,6 +30,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.jetbrains.kmpapp.TemplatePage
+import com.jetbrains.kmpapp.modules.Article
 import com.jetbrains.kmpapp.viewmodels.HomeViewModel
 import com.lt.compose_views.compose_pager.ComposePager
 import com.lt.compose_views.compose_pager.rememberComposePagerState
@@ -48,11 +53,12 @@ import com.lt.compose_views.refresh_layout.VerticalRefreshableLayout
 import com.lt.compose_views.refresh_layout.refresh_content.EllipseRefreshContent
 import com.lt.compose_views.refresh_layout.rememberRefreshLayoutState
 import com.lt.compose_views.util.ComposePosition
-import com.lt.compose_views.util.rememberMutableStateOf
+import kmp_app_template.composeapp.generated.resources.Res
+import kmp_app_template.composeapp.generated.resources.article_like
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.koin.compose.getKoin
+import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -70,21 +76,84 @@ fun HomeDestination(
         innerPadding.calculateBottomPadding()
     )
     val articleList = viewModel.articleList.collectAsStateWithLifecycle()
-    if (articleList.value == null) {
+    if (articleList.value == null || articleList.value?.datas.isNullOrEmpty()) {
         println("articleList is null")
         Column(modifier = Modifier.padding(padding)) {
             Text("Home", modifier = Modifier.clickable {
                 appNavController.navigate(TemplatePage)
             })
         }
-        return
+    } else {
+        Column(modifier = Modifier.padding(padding).fillMaxSize()) {
+            //    ComposeContent()
+            HomeArticleList(viewModel, articleList.value!!.datas!!)
+        }
     }
-//    Column(modifier = Modifier.padding(padding)) {
-//        Text(articleList.value.toString(), modifier = Modifier.clickable {
-//            appNavController.navigate(TemplatePage)
-//        })
-//    }
-    ComposeContent()
+}
+
+@Composable
+fun HomeArticleList(viewModel: HomeViewModel, articleList: List<Article>) {
+    val coroutineScope = rememberCoroutineScope()
+
+    val topRefreshState = rememberRefreshLayoutState {
+        coroutineScope.launch {
+//        "刷新了".showToast()
+            delay(2000)
+            setRefreshState(RefreshContentStateEnum.Stop)
+        }
+    }
+    val isLoadFinish = remember { mutableStateOf(false) }
+    val bottomRefreshState = rememberRefreshLayoutState(onRefreshListener = {
+        coroutineScope.launch {
+//                "加载数据了".showToast()
+            delay(2000)
+            setRefreshState(RefreshContentStateEnum.Stop)
+            isLoadFinish.value = true
+        }
+    })
+    VerticalRefreshableLayout(
+        // 顶部刷新的状态
+        topRefreshLayoutState = topRefreshState,
+        // 底部刷新的状态
+        bottomRefreshLayoutState = bottomRefreshState,
+        modifier = Modifier.fillMaxSize(),
+        bottomIsLoadFinish = isLoadFinish.value
+    ) {
+        LazyColumn(modifier = Modifier.fillMaxSize(), content = {
+            repeat(articleList.size) {
+                item(key = it) {
+                    Column(modifier = Modifier.fillMaxWidth().padding(6.dp, 10.dp, 6.dp, 10.dp)) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            val author = if (articleList[it].author.isNullOrEmpty()) {
+                                articleList[it].shareUser ?: ""
+                            } else {
+                                articleList[it].author ?: ""
+                            }
+                            Text(text = author)
+                            Text(text = articleList[it].niceDate)
+                        }
+                        VerticalSpace(dp = 3)
+                        Text(text = articleList[it].title)
+                        Spacer(modifier = Modifier.height(3.dp))
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(text = articleList[it].superChapterName + "." + articleList[it].chapterName)
+//                            Icon(imageVector = Icons.Default.Favorite, contentDescription = "Like")
+                            Icon(
+                                imageVector = vectorResource(Res.drawable.article_like),
+                                contentDescription = "Like"
+                            )
+                        }
+                    }
+                }
+            }
+        })
+    }
 }
 
 

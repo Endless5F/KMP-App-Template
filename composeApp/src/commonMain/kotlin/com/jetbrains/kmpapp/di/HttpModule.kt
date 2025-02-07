@@ -23,10 +23,8 @@ import io.ktor.http.path
 import io.ktor.serialization.kotlinx.json.DefaultJson
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.runBlocking
-import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonNamingStrategy
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import org.koin.core.qualifier.named
@@ -34,13 +32,12 @@ import org.koin.dsl.module
 import org.koin.mp.KoinPlatform
 
 const val HTTP_NAMED = "OkHttpClient"
+
 // TODO 替换为真实值
 const val HOST = "www.wanandroid.com"
 const val PATH = ""
 
-@OptIn(ExperimentalSerializationApi::class)
 val json = Json(DefaultJson) {
-    namingStrategy = JsonNamingStrategy.SnakeCase
     ignoreUnknownKeys = true
     explicitNulls = false
 }
