@@ -1,3 +1,5 @@
+@file:Suppress("NAME_SHADOWING")
+
 package com.jetbrains.kmpapp.compose.index
 
 import androidx.compose.foundation.background
@@ -30,13 +32,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.jetbrains.kmpapp.TemplatePage
 import com.jetbrains.kmpapp.modules.Article
@@ -75,40 +75,52 @@ fun HomeDestination(
         innerPadding.calculateEndPadding(LocalLayoutDirection.current),
         innerPadding.calculateBottomPadding()
     )
-    val articleList = viewModel.articleList.collectAsStateWithLifecycle()
-    if (articleList.value == null || articleList.value?.datas.isNullOrEmpty()) {
+    val pagingData = viewModel.pagingState.value
+    if (pagingData.data.isEmpty()) {
         println("articleList is null")
         Column(modifier = Modifier.padding(padding)) {
-            Text("Home", modifier = Modifier.clickable {
+            Text("ArticleList is null", modifier = Modifier.clickable {
                 appNavController.navigate(TemplatePage)
             })
         }
     } else {
         Column(modifier = Modifier.padding(padding).fillMaxSize()) {
-            //    ComposeContent()
-            HomeArticleList(viewModel, articleList.value!!.datas!!)
+//            ComposeContent()
+            HomeArticleList(
+                { pagingData.data.toList() },
+                { viewModel.loadingState.value },
+                { viewModel.isLoadingFinish.value },
+                { viewModel.refresh() },
+                { viewModel.loadMore() }
+            )
         }
     }
 }
 
+/**
+ * 注：如果使用Paging组件显示，
+ * 则直接使用系统提供的 PullToRefreshBox来实现下拉刷新，
+ * 上拉加载Paging组件会自动处理只需要处理上拉加载时的UI显示即可
+ */
 @Composable
-fun HomeArticleList(viewModel: HomeViewModel, articleList: List<Article>) {
-    val coroutineScope = rememberCoroutineScope()
-
+fun HomeArticleList(
+    articleListInvoke: () -> List<Article>,
+    loadingState: () -> Boolean,
+    isLoadFinish: () -> Boolean,
+    topRefresh: () -> Unit,
+    bottomRefresh: () -> Unit
+) {
+    // TODO 状态存在问题
+    val isLoadFinish = isLoadFinish()
     val topRefreshState = rememberRefreshLayoutState {
-        coroutineScope.launch {
-//        "刷新了".showToast()
-            delay(2000)
-            setRefreshState(RefreshContentStateEnum.Stop)
-        }
+        topRefresh()
+        setRefreshState(RefreshContentStateEnum.Stop)
     }
-    val isLoadFinish = remember { mutableStateOf(false) }
     val bottomRefreshState = rememberRefreshLayoutState(onRefreshListener = {
-        coroutineScope.launch {
-//                "加载数据了".showToast()
-            delay(2000)
+        val loadingState = loadingState()
+        if (!loadingState) {
+            bottomRefresh()
             setRefreshState(RefreshContentStateEnum.Stop)
-            isLoadFinish.value = true
         }
     })
     VerticalRefreshableLayout(
@@ -117,8 +129,9 @@ fun HomeArticleList(viewModel: HomeViewModel, articleList: List<Article>) {
         // 底部刷新的状态
         bottomRefreshLayoutState = bottomRefreshState,
         modifier = Modifier.fillMaxSize(),
-        bottomIsLoadFinish = isLoadFinish.value
+        bottomIsLoadFinish = isLoadFinish
     ) {
+        val articleList = articleListInvoke()
         LazyColumn(modifier = Modifier.fillMaxSize(), content = {
             repeat(articleList.size) {
                 item(key = it) {

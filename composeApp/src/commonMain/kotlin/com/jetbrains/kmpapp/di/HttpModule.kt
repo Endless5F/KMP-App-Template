@@ -95,7 +95,7 @@ fun getHttpClient() = KoinPlatform.getKoin().get<HttpClient>(named("OkHttpClient
 
 @Serializable
 data class BodyWrapper<T>(
-    val errorCode: Int = 0,
+    val errorCode: Int = 400,
     val errorMsg: String?,
     val data: T,
 )

@@ -1,36 +1,56 @@
 package com.jetbrains.kmpapp.repositories
 
 import com.jetbrains.kmpapp.di.bodyData
+import com.jetbrains.kmpapp.modules.Article
 import com.jetbrains.kmpapp.modules.ArticleData
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.take
+
+// 2. 定义分页状态类
+data class PagingData<T>(
+    val data: List<T> = emptyList(),
+    val isLoading: Boolean = false,
+    val isRefreshing: Boolean = false,
+    val error: Throwable? = null,
+    val hasMore: Boolean = true
+)
 
 interface HomeRepository {
-    val articleList: StateFlow<ArticleData?>
+    val articleList: StateFlow<List<Article>?>
 
+    suspend fun refresh()
+
+    suspend fun loadMore()
 }
 
-class HomeRepositoryImpl(private val client: HttpClient, applicationScope: CoroutineScope) : HomeRepository {
+class HomeRepositoryImpl(private val client: HttpClient, applicationScope: CoroutineScope) :
+    HomeRepository {
 
-    override val articleList: StateFlow<ArticleData?> = flow {
-        val articleData = client.get("article/list/0/json").bodyData<ArticleData>()
-        emit(articleData)
-    }.catch {
-        println("HomeRepositoryImpl, catch: $it")
-    }.take(1).onEach {
-        // TODO 保存数据
-        println("HomeRepositoryImpl, articleList: $it")
-    }.onStart {
-        // TODO 读取缓存
-        println("HomeRepositoryImpl, articleList: onStart")
-    }.stateIn(applicationScope, SharingStarted.Eagerly, null)
+    private val _currentPage = MutableStateFlow(0)
+    private val _allData = MutableStateFlow<List<Article>>(emptyList())
+
+    override val articleList: StateFlow<List<Article>> = _allData
+        .stateIn(applicationScope, SharingStarted.Eagerly, emptyList())
+
+    override suspend fun refresh() {
+        kotlin.runCatching {
+            val result = client.get("article/list/0/json").bodyData<ArticleData>()
+            _allData.value = result.datas ?: emptyList()
+            _currentPage.value = 0
+        }
+    }
+
+    override suspend fun loadMore() {
+        val nextPage = _currentPage.value + 1
+        kotlin.runCatching {
+            val result = client.get("article/list/$nextPage/json").bodyData<ArticleData>()
+            _allData.value += (result.datas ?: emptyList())
+            _currentPage.value = nextPage
+        }
+    }
 }
