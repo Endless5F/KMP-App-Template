@@ -86,6 +86,10 @@ kotlin {
             // ChainScrollableComponent + ScrollableAppBar + SwipeToDismiss
             implementation(libs.composeviews)
 
+            // 折叠效果: https://github.com/onebone/compose-collapsing-toolbar
+            // 由于仅适配了Android，所以这里不引入，直接通过源码引入
+//            implementation("me.onebone:toolbar-compose:2.3.5")
+
         }
     }
 }

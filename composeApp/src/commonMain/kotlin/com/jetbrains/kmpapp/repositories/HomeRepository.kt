@@ -22,6 +22,8 @@ data class PagingData<T>(
 
 interface HomeRepository {
     val articleList: StateFlow<List<Article>?>
+    val isRefreshing: StateFlow<Boolean>
+    val isLoadingMore: StateFlow<Boolean>
 
     suspend fun refresh()
 
@@ -33,24 +35,43 @@ class HomeRepositoryImpl(private val client: HttpClient, applicationScope: Corou
 
     private val _currentPage = MutableStateFlow(0)
     private val _allData = MutableStateFlow<List<Article>>(emptyList())
+    private val _isRefreshing = MutableStateFlow(false)
+    private val _isLoadingMore = MutableStateFlow(false)
 
     override val articleList: StateFlow<List<Article>> = _allData
         .stateIn(applicationScope, SharingStarted.Eagerly, emptyList())
 
+    override val isRefreshing: StateFlow<Boolean> = _isRefreshing
+        .stateIn(applicationScope, SharingStarted.Eagerly, false)
+
+    override val isLoadingMore: StateFlow<Boolean> = _isLoadingMore
+        .stateIn(applicationScope, SharingStarted.Eagerly, false)
+
     override suspend fun refresh() {
+        _isRefreshing.value = true
         kotlin.runCatching {
             val result = client.get("article/list/0/json").bodyData<ArticleData>()
-            _allData.value = result.datas ?: emptyList()
+            _allData.value = result.datas?.toList() ?: emptyList() // 强制创建新列表
             _currentPage.value = 0
+        }.onFailure {
+            // Handle the failure if needed
+        }.also {
+            _isRefreshing.value = false
         }
     }
 
     override suspend fun loadMore() {
         val nextPage = _currentPage.value + 1
+        _isLoadingMore.value = true
         kotlin.runCatching {
             val result = client.get("article/list/$nextPage/json").bodyData<ArticleData>()
-            _allData.value += (result.datas ?: emptyList())
+            _allData.value += (result.datas ?: emptyList()) // 强制创建新列表
             _currentPage.value = nextPage
+        }.onFailure {
+            // Handle the failure if needed
+        }.also {
+            _isLoadingMore.value = false
         }
     }
 }
+

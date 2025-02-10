@@ -29,17 +29,21 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.jetbrains.kmpapp.TemplatePage
 import com.jetbrains.kmpapp.modules.Article
+import com.jetbrains.kmpapp.repositories.PagingData
 import com.jetbrains.kmpapp.viewmodels.HomeViewModel
 import com.lt.compose_views.compose_pager.ComposePager
 import com.lt.compose_views.compose_pager.rememberComposePagerState
@@ -75,8 +79,8 @@ fun HomeDestination(
         innerPadding.calculateEndPadding(LocalLayoutDirection.current),
         innerPadding.calculateBottomPadding()
     )
-    val pagingData = viewModel.pagingState.value
-    if (pagingData.data.isEmpty()) {
+    val pagingData = viewModel.pagingState.collectAsStateWithLifecycle()
+    if (pagingData.value.data.isEmpty()) {
         println("articleList is null")
         Column(modifier = Modifier.padding(padding)) {
             Text("ArticleList is null", modifier = Modifier.clickable {
@@ -87,9 +91,7 @@ fun HomeDestination(
         Column(modifier = Modifier.padding(padding).fillMaxSize()) {
 //            ComposeContent()
             HomeArticleList(
-                { pagingData.data.toList() },
-                { viewModel.loadingState.value },
-                { viewModel.isLoadingFinish.value },
+                { pagingData.value },
                 { viewModel.refresh() },
                 { viewModel.loadMore() }
             )
@@ -104,25 +106,37 @@ fun HomeDestination(
  */
 @Composable
 fun HomeArticleList(
-    articleListInvoke: () -> List<Article>,
-    loadingState: () -> Boolean,
-    isLoadFinish: () -> Boolean,
+    pagingData: () -> PagingData<Article>,
     topRefresh: () -> Unit,
     bottomRefresh: () -> Unit
 ) {
-    // TODO 状态存在问题
-    val isLoadFinish = isLoadFinish()
-    val topRefreshState = rememberRefreshLayoutState {
+    val pagingData = pagingData()
+
+    val topRefreshState = rememberRefreshLayoutState(onRefreshListener = {
         topRefresh()
-        setRefreshState(RefreshContentStateEnum.Stop)
-    }
-    val bottomRefreshState = rememberRefreshLayoutState(onRefreshListener = {
-        val loadingState = loadingState()
-        if (!loadingState) {
-            bottomRefresh()
-            setRefreshState(RefreshContentStateEnum.Stop)
-        }
     })
+    val bottomRefreshState = rememberRefreshLayoutState(onRefreshListener = {
+        bottomRefresh()
+    })
+
+    // 使用 LaunchedEffect 监听状态变化
+    LaunchedEffect(pagingData.isRefreshing) {
+        if (pagingData.isRefreshing) {
+            topRefreshState.setRefreshState(RefreshContentStateEnum.Refreshing)
+        } else {
+            topRefreshState.setRefreshState(RefreshContentStateEnum.Stop)
+        }
+    }
+    var isLoadFinish by remember { mutableStateOf(false) }
+    LaunchedEffect(pagingData.isLoading) {
+        if (!pagingData.hasMore) {
+            isLoadFinish = true
+        }
+        if (!pagingData.isLoading) {
+            bottomRefreshState.setRefreshState(RefreshContentStateEnum.Stop)
+        }
+    }
+
     VerticalRefreshableLayout(
         // 顶部刷新的状态
         topRefreshLayoutState = topRefreshState,
@@ -131,7 +145,7 @@ fun HomeArticleList(
         modifier = Modifier.fillMaxSize(),
         bottomIsLoadFinish = isLoadFinish
     ) {
-        val articleList = articleListInvoke()
+        val articleList = pagingData.data
         LazyColumn(modifier = Modifier.fillMaxSize(), content = {
             repeat(articleList.size) {
                 item(key = it) {
