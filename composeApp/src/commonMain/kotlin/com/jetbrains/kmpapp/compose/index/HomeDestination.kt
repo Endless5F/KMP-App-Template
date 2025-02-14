@@ -66,6 +66,9 @@ import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
+/**
+ * 传统逻辑实现分页列表
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeDestination(

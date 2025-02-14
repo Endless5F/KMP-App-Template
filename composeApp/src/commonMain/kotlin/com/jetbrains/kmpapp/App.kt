@@ -129,7 +129,7 @@ fun MainPage(appNavController: NavHostController) {
     ) { innerPadding ->
         when (currentDestination.value) {
             AppDestinations.HOME -> HomeDestination(appNavController, innerPadding)
-            AppDestinations.FAVORITES -> FavoritesDestination(innerPadding)
+            AppDestinations.FAVORITES -> FavoritesDestination(appNavController, innerPadding)
             AppDestinations.SHOPPING -> ShoppingDestination(innerPadding)
             AppDestinations.PROFILE -> ProfileDestination(innerPadding)
         }

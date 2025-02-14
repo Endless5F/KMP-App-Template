@@ -51,6 +51,7 @@ kotlin {
             implementation(libs.adaptive)
             implementation(libs.adaptive.layout)
             implementation(libs.adaptive.navigation)
+            implementation(libs.paging.compose)
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.logging)
             implementation(libs.ktor.client.content.negotiation)
